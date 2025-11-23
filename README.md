@@ -1,79 +1,62 @@
 # EXP 1 A : COMPUTATION OF DFT USING DIRECT AND FFT
 
 # AIM: 
-
-# To Obtain DFT and FFT of a given sequence in SCILAB. 
+To Obtain DFT and FFT of a given sequence in SCILAB. 
 
 # APPARATUS REQUIRED: 
 PC installed with SCILAB. 
 
 # PROGRAM: 
-// DISCRETE FOURIER TRANSFORM 
 clc;
 clear;
-close;
 
-// Input sequence (8 samples)
-x = [1 2 3 4 4 3 2 1];
+// Input sequence
+x = [1 2 3 4];   // change your sequence here
+
 N = length(x);
 
-// -------- Input Plot --------
-subplot(2,1,1);
-plot2d3(0:N-1, x);
-xlabel("n");
-ylabel("Amplitude");
-title("Input Sequence");
-xgrid();
+// ----------- DFT (manual) ----------
+X_dft = zeros(1, N);
 
-// -------- DIF FFT Computation --------
-stages = log2(N);
-X = x; // copy input
-
-for s = 1:stages
-    m = 2^s;
-    half = m/2;
-    Wm = exp(-%i * 2 * %pi / m);
-    for k = 0:(N/m - 1)
-        for j = 0:(half - 1)
-            t = X(k*m + j + 1);
-            u = X(k*m + j + half + 1);
-            X(k*m + j + 1) = t + u;
-            X(k*m + j + half + 1) = (t - u) * (Wm^j);
-        end
+for k = 0:N-1
+    for n = 0:N-1
+        X_dft(k+1) = X_dft(k+1) + x(n+1) * exp(-%i*2*%pi*k*n/N);
     end
 end
 
-// -------- Bit reversal (manual version) --------
-function y = bitrevorder_manual(N)
-    bits = log2(N);
-    y = zeros(1,N);
-    for n = 0:(N-1)
-        b = dec2bin(n,bits);
-        rb = part(b, length(b):-1:1);
-        y(n+1) = bin2dec(rb) + 1;
-    end
-endfunction
+// ----------- FFT (inbuilt) ----------
+X_fft = fft(x, -1);
 
-order = bitrevorder_manual(N);
-X = X(order);
+// ----------- FIX FOR NO GRAPH PROBLEM -----------
+clf();        // clears figure
+scf(0);       // opens figure window
 
-// -------- Display output values --------
-disp("DIF FFT Output (Complex values):");
-disp(X);
+// ----------- PLOTTING -----------
+subplot(2,2,1);
+plot2d3(0:N-1, abs(X_dft));
+title("Magnitude of DFT");
 
-// -------- Output Plot --------
-subplot(2,1,2);
-plot2d3(0:N-1, abs(X));
-xlabel("k");
-ylabel("|X(k)|");
-title("Magnitude Spectrum using DIF");
-xgrid();
+subplot(2,2,2);
+plot2d3(0:N-1, imag(X_dft));
+title("Imaginary Part of DFT");
+
+subplot(2,2,3);
+plot2d3(0:N-1, abs(X_fft));
+title("Magnitude of FFT");
+
+subplot(2,2,4);
+plot2d3(0:N-1, imag(X_fft));
+title("Imaginary Part of FFT");
 
 
 
-# OUTPUT: <img width="765" height="725" alt="image" src="https://github.com/user-attachments/assets/e6e00d1a-ec9d-47ef-bd14-c4df26db7119" />
+# OUTPUT:
+
+<img width="1920" height="1140" alt="image" src="https://github.com/user-attachments/assets/e2269ccc-fa15-424c-ac4b-3588fff0c413" />
 
 
 
-# RESULT: Hence got the output for DFT and FFT of a given sequence in SCILAB.
+
+# RESULT:
+Hence got the output for DFT and FFT of a given sequence in SCILAB.
 
