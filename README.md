@@ -7,6 +7,7 @@ To Obtain DFT and FFT of a given sequence in SCILAB.
 PC installed with SCILAB. 
 
 # PROGRAM: 
+```
 clc;
 clear;
 
@@ -47,6 +48,7 @@ title("Magnitude of FFT");
 subplot(2,2,4);
 plot2d3(0:N-1, imag(X_fft));
 title("Imaginary Part of FFT");
+```
 
 
 
